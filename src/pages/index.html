@@ -10,8 +10,9 @@
     <style>
         :root {
             --sidebar-bg: #2c3e50;
-            --header-bg: #3498db;
+            --header-bg: #2c3e50; /* Cambiar el color de fondo del topbar para que coincida */
             --pink: #e83e8c;
+            --kawaii-color: #ff6f91; /* Color kawaii para MYUWEB */
         }
         body, html {
             height: 100%;
@@ -26,6 +27,7 @@
         #sidebar {
             background-color: var(--sidebar-bg);
             width: 280px;
+            transition: transform 0.3s ease;
         }
         #topbar {
             background-color: var(--header-bg) !important;
@@ -46,23 +48,36 @@
         .sidebar-logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--header-bg);
+            color: white; /* Cambiar el color de "MYUWEB" a blanco */
             margin-bottom: 1rem;
+            display: flex;
+            align-items: center; /* Alinear verticalmente */
         }
         .pink-icon {
             color: var(--pink) !important;
+        }
+        .nav-icon {
+            width: 20px; /* Tamaño del icono */
+            margin-right: 10px; /* Espaciado entre el icono y el texto */
+        }
+        .hide {
+            display: none;
+        }
+        .sidebar-nav.collapsed {
+            width: 80px; /* Ancho del sidebar colapsado */
+        }
+        .sidebar-nav.collapsed .nav-link span {
+            display: none; /* Oculta el texto cuando está colapsado */
         }
     </style>
 </head>
 <body class="bg-light">
     <div class="d-flex h-100">
         <!-- Sidebar -->
-        <div id="sidebar" class="text-white d-flex flex-column flex-shrink-0 p-3 shadow">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="sidebar-logo">MYUWEB</div>
-                <button id="sidebarCollapseBtn" class="btn btn-link text-white">
-                    <i data-lucide="menu"></i>
-                </button>
+        <div id="sidebar" class="text-white d-flex flex-column flex-shrink-0 p-3 shadow sidebar-nav">
+            <div class="sidebar-logo" id="myuwebLogo">
+                MYUWEB
+                <i id="hamburgerBtn" class="ml-2" data-lucide="menu"></i> <!-- Ícono de hamburguesa al lado del texto -->
             </div>
             <div class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
                 <img src="https://via.placeholder.com/40" alt="User" class="rounded-circle me-2">
@@ -75,23 +90,22 @@
             <div class="mb-3">
                 <input type="text" class="form-control bg-secondary text-white" placeholder="Search...">
             </div>
-            <ul class="nav nav-pills flex-column mb-auto sidebar-nav overflow-auto" style="height: calc(100vh - 200px);">
+            <ul class="nav nav-pills flex-column mb-auto sidebar-nav" style="height: calc(100vh - 200px);" id="navItems">
                 <li class="nav-item">
-                    <a href="#" class="nav-link active d-flex justify-content-between align-items-center" aria-current="page">
-                        Dashboard
-                        <i data-lucide="chevron-down" class="ml-2"></i>
+                    <a href="#" class="nav-link active d-flex justify-content-start align-items-center" aria-current="page">
+                        <i class="nav-icon" data-lucide="grid"></i> <span>Dashboard</span>
                     </a>
                 </li>
-                <li><a href="#" class="nav-link text-white">Widgets</a></li>
-                <li><a href="#" class="nav-link text-white">Charts</a></li>
-                <li><a href="#" class="nav-link text-white">UI Elements</a></li>
-                <li><a href="#" class="nav-link text-white">Forms</a></li>
-                <li><a href="#" class="nav-link text-white">Tables</a></li>
-                <li><a href="#" class="nav-link text-white">Calendar</a></li>
-                <li><a href="#" class="nav-link text-white">Mailbox</a></li>
-                <li><a href="#" class="nav-link text-white">Examples</a></li>
-                <li><a href="#" class="nav-link text-white">Multilevel</a></li>
-                <li><a href="#" class="nav-link text-white">Documentation</a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="box"></i> <span>Widgets</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="chart-pie"></i> <span>Charts</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="layout"></i> <span>UI Elements</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="form"></i> <span>Forms</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="table"></i> <span>Tables</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="calendar"></i> <span>Calendar</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="mail"></i> <span>Mailbox</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="file-text"></i> <span>Examples</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="folder"></i> <span>Multilevel</span></a></li>
+                <li><a href="#" class="nav-link text-white d-flex align-items-center"><i class="nav-icon" data-lucide="book-open"></i> <span>Documentation</span></a></li>
             </ul>
         </div>
 
@@ -103,14 +117,14 @@
                     <button id="sidebarToggle" class="btn btn-link d-md-none">
                         <i data-lucide="menu" class="text-white"></i>
                     </button>
-                    <a class="navbar-brand" href="#">MYUWEB</a>
+                    <a class="navbar-brand text-white" href="#">MYUWEB</a>
                     <div class="d-flex align-items-center">
                         <i data-lucide="mail" class="text-white me-3"></i>
                         <i data-lucide="bell" class="text-white me-3"></i>
                         <i data-lucide="shopping-bag" class="text-white me-3"></i>
                         <img src="https://via.placeholder.com/32" alt="User" class="rounded-circle me-2">
                         <button id="themeToggle" class="btn btn-link">
-                            <i data-lucide="settings" class="text-white"></i>
+                            <i data-lucide="settings" class="pink-icon"></i>
                         </button>
                     </div>
                 </div>
@@ -118,7 +132,21 @@
 
             <!-- Dashboard content -->
             <main class="flex-grow-1 overflow-auto p-4">
-                <!-- ... (el resto del contenido del dashboard permanece igual) ... -->
+                <!-- Aquí puedes agregar más contenido del dashboard -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="stat-card bg-primary">
+                            <h2>Stat 1</h2>
+                            <p>Some details here.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="stat-card bg-secondary">
+                            <h2>Stat 2</h2>
+                            <p>Some details here.</p>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
@@ -129,33 +157,18 @@
         lucide.createIcons();
 
         // Sidebar toggle
-        const sidebarToggle = document.getElementById('sidebarToggle');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
         const sidebar = document.getElementById('sidebar');
-        const content = document.querySelector('.flex-grow-1');
-        sidebarToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('d-none');
-            content.classList.toggle('ms-0');
-        });
 
-        // Sidebar collapse
-        const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
-        const sidebarNav = document.querySelector('.sidebar-nav');
-        sidebarCollapseBtn.addEventListener('click', () => {
-            sidebarNav.classList.toggle('d-none');
-        });
+        let sidebarVisible = true; // Cambiar a true para que esté visible por defecto
 
-        // Theme toggle (changes top bar color and settings icon)
-        const themeToggle = document.getElementById('themeToggle');
-        const topbar = document.getElementById('topbar');
-        const settingsIcon = themeToggle.querySelector('i');
-        const themes = ['bg-primary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info', 'bg-pink'];
-        let themeIndex = 0;
-        themeToggle.addEventListener('click', () => {
-            topbar.style.backgroundColor = '';
-            topbar.classList.remove(themes[themeIndex]);
-            themeIndex = (themeIndex + 1) % themes.length;
-            topbar.classList.add(themes[themeIndex]);
-            settingsIcon.classList.toggle('pink-icon');
+        hamburgerBtn.addEventListener('click', () => {
+            sidebarVisible = !sidebarVisible;
+            if (sidebarVisible) {
+                sidebar.style.transform = 'translateX(0)'; // Mostrar el sidebar
+            } else {
+                sidebar.style.transform = 'translateX(-80%)'; // Ocultar el sidebar parcialmente
+            }
         });
     </script>
 </body>
