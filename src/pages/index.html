@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MYU Dashboard</title>
+    <title>MYU Dashboard - Tienda de Ropa</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -154,7 +154,6 @@
                     <div class="text-success">• ONLINE  </div>
                 </div>
             </div>
-            
 
             <div id="search-bar" class="mb-3">
                 <input type="text" class="form-control bg-secondary text-white" placeholder="Search...">
@@ -162,15 +161,12 @@
 
             <!-- Navigation Links -->
             <ul class="nav flex-column mb-auto sidebar-nav" style="height: calc(100vh - 200px);" id="navItems">
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="box"></i> <span>Widgets</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="chart-pie"></i> <span>Charts</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="layout"></i> <span>UI Elements</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="table"></i> <span>Tables</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="calendar"></i> <span>Calendar</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="mail"></i> <span>Mailbox</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="file-text"></i> <span>Examples</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="folder"></i> <span>Multilevel</span></a></li>
-                <li><a href="#" class="nav-link"><i class="nav-icon" data-lucide="book-open"></i> <span>Documentation</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('productos')"><i class="nav-icon" data-lucide="box"></i> <span>Productos</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('categorias')"><i class="nav-icon" data-lucide="tag"></i> <span>Categorías</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('inventario')"><i class="nav-icon" data-lucide="archive"></i> <span>Inventario</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('clientes')"><i class="nav-icon" data-lucide="users"></i> <span>Clientes</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('ventas')"><i class="nav-icon" data-lucide="shopping-bag"></i> <span>Ventas</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('reportes')"><i class="nav-icon" data-lucide="bar-chart"></i> <span>Reportes</span></a></li>
             </ul>
         </div>
 
@@ -187,63 +183,65 @@
                         <i data-lucide="mail" class="text-white me-3"></i>
                         <i data-lucide="bell" class="text-white me-3"></i>
                         <i data-lucide="shopping-bag" class="text-white me-3"></i>
-                        <img src="https://via.placeholder.com/32" alt="User" class="rounded-circle me-2">
-                        <button id="themeToggle" class="btn btn-link">
-                            <i data-lucide="settings" class="pink-icon"></i>
-                        </button>
+                        <img src="https://scontent.flim31-1.fna.fbcdn.net/v/t39.30808-6/342183012_279359097759672_146673611003331041_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=OgPyRVHmb0YQ7kNvgEmMXTY&_nc_ht=scontent.flim31-1.fna&oh=00_AYDiu8idiMi_it3J0OvN00Jg9llbspsVLAxhuvGBslzbsQ&oe=6703381F" alt="User" class="rounded-circle me-2" width="40" height="40">
                     </div>
                 </div>
             </header>
 
-            <!-- Dashboard content -->
-            <main class="flex-grow-1 overflow-auto p-4">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="stat-card">
-                            <h2>Stat 1</h2>
-                            <p>Some details here.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="stat-card">
-                            <h2>Stat 2</h2>
-                            <p>Some details here.</p>
-                        </div>
-                    </div>
+            <!-- Content area -->
+            <main class="flex-grow-1 overflow-auto p-4" id="content">
+                <!-- Aquí se mostrará el contenido dinámico -->
+                <div id="productos" class="content-section" style="display: none;">
+                    <h2>Gestión de Productos</h2>
+                    <p>Aquí puedes gestionar tus productos.</p>
+                </div>
+                <div id="categorias" class="content-section" style="display: none;">
+                    <h2>Gestión de Categorías</h2>
+                    <p>Aquí puedes gestionar las categorías de productos.</p>
+                </div>
+                <div id="inventario" class="content-section" style="display: none;">
+                    <h2>Gestión de Inventario</h2>
+                    <p>Aquí puedes controlar las existencias de los productos.</p>
+                </div>
+                <div id="clientes" class="content-section" style="display: none;">
+                    <h2>Gestión de Clientes</h2>
+                    <p>Aquí puedes gestionar la información de los clientes.</p>
+                </div>
+                <div id="ventas" class="content-section" style="display: none;">
+                    <h2>Gestión de Ventas</h2>
+                    <p>Aquí puedes gestionar tus ventas.</p>
+                </div>
+                <div id="reportes" class="content-section" style="display: none;">
+                    <h2>Reportes de Ventas</h2>
+                    <p>Aquí puedes revisar los reportes de ventas.</p>
                 </div>
             </main>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        // Función para cambiar de contenido
+        const showContent = (section) => {
+            document.querySelectorAll('.content-section').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById(section).style.display = 'block';
+        };
 
-        // Sidebar toggle
-        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        // Mostrar la primera sección de productos al cargar la página
+        document.querySelector('[onclick="showContent(\'productos\')"]').click();
+
+        // Evento para colapsar el sidebar
         const sidebar = document.getElementById('sidebar');
-        const fullLogo = document.getElementById('fullLogo');
-        const userInfo = document.getElementById('user-info');
-        const logoMYU = document.querySelector('.sidebar-logo span:first-child');
-        const userDetails = document.getElementById('user-details');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
 
         hamburgerBtn.addEventListener('click', () => {
             sidebar.classList.toggle('collapsed');
-
-            if (sidebar.classList.contains('collapsed')) {
-                fullLogo.style.display = 'none';
-            } else {
-                fullLogo.style.display = 'inline';
-            }
         });
 
-        // Expand sidebar when clicking "MYU" logo
-        logoMYU.addEventListener('click', () => {
-            if (sidebar.classList.contains('collapsed')) {
-                sidebar.classList.remove('collapsed');
-                fullLogo.style.display = 'inline';
-            }
+        // Cargar íconos al cargar la página
+        document.addEventListener('DOMContentLoaded', function () {
+            lucide.createIcons();
         });
     </script>
 </body>
