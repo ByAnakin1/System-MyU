@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MYU Dashboard - Tienda de Ropa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --sidebar-bg: #2c3e50;
+            --header-bg: #2c3e50;
+            --pink: #e83e8c;
+            --stat-card-bg: #4b4f56;
+            --hover-bg: rgba(232, 62, 140, 0.5);
+        }
+        body, html {
+            height: 100%;
+        }
+        .sidebar-nav::-webkit-scrollbar {
+            width: 5px;
+        }
+        .sidebar-nav::-webkit-scrollbar-thumb {
+            background-color: #4B5563;
+            border-radius: 5px;
+        }
+        #sidebar {
+            background-color: var(--sidebar-bg);
+            width: 280px;
+            transition: all 0.3s ease;
+        }
+        #sidebar.collapsed {
+            width: 80px;
+        }
+        #topbar {
+            background-color: var(--header-bg) !important;
+        }
+        .stat-card {
+            border-radius: 4px;
+            padding: 20px;
+            background-color: var(--stat-card-bg);
+            color: white;
+            margin-bottom: 20px;
+        }
+        .stat-card h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        .stat-card p {
+            margin-bottom: 0;
+        }
+        .sidebar-logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+        .sidebar-logo.collapsed span {
+            display: none;
+        }
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+        }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            color: white;
+            transition: background-color 0.3s ease;
+        }
+        .nav-link:hover {
+            background-color: var(--hover-bg);
+        }
+        .nav-link span {
+            transition: opacity 0.3s ease;
+        }
+        #sidebar.collapsed .nav-link span {
+            display: none;
+        }
+        #sidebar.collapsed .nav-link {
+            justify-content: center;
+            padding: 10px 0;
+        }
+        #sidebar.collapsed .nav-icon {
+            margin-right: 0;
+        }
+        .collapsed .sidebar-content {
+            display: none;
+        }
+        .collapsed .sidebar-logo span {
+            display: inline;
+        }
+        .sidebar-nav.collapsed {
+            width: 80px;
+        }
+        #hamburgerBtn {
+            cursor: pointer;
+        }
+        #user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.3s ease;
+            padding: 10px;
+        }
+        #user-info img {
+            width: 150px;
+            height: 150px;
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+        #sidebar.collapsed #user-info img {
+            width: 50px;
+            height: 50px;
+        }
+        #user-details {
+            text-align: center;
+            transition: opacity 0.3s ease, max-height 0.3s ease;
+            opacity: 1;
+            max-height: 50px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        #sidebar.collapsed #user-details {
+            opacity: 0;
+            max-height: 0;
+        }
+        #sidebar.collapsed #fullLogo {
+            display: none;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <div class="d-flex h-100">
+        <!-- Sidebar -->
+        <div id="sidebar" class="text-white d-flex flex-column flex-shrink-0 p-3 shadow sidebar-nav">
+            <!-- Sidebar Header -->
+            <div class="sidebar-logo">
+                <span>MYU</span>
+                <span id="fullLogo" style="display: inline;">WEB</span>
+                <i id="hamburgerBtn" class="ml-2" data-lucide="menu"></i>
+            </div>
+
+            <!-- Search and User Info -->
+            <div id="user-info" class="mb-4">
+                <img src="https://scontent.flim31-1.fna.fbcdn.net/v/t39.30808-6/342183012_279359097759672_146673611003331041_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=OgPyRVHmb0YQ7kNvgEmMXTY&_nc_ht=scontent.flim31-1.fna&oh=00_AYDiu8idiMi_it3J0OvN00Jg9llbspsVLAxhuvGBslzbsQ&oe=6703381F" alt="User" class="rounded-circle">
+                <div id="user-details">
+                    <div class="fs-5">Tay</div>
+                    <div class="text-success">• ONLINE  </div>
+                </div>
+            </div>
+
+            <div id="search-bar" class="mb-3">
+                <input type="text" class="form-control bg-secondary text-white" placeholder="Search...">
+            </div>
+
+            <!-- Navigation Links -->
+            <ul class="nav flex-column mb-auto sidebar-nav" style="height: calc(100vh - 200px);" id="navItems">
+                <li><a href="#" class="nav-link" onclick="showContent('productos')"><i class="nav-icon" data-lucide="box"></i> <span>Productos</span></a></li>
+                
+                <li>
+                    <a href="#" class="nav-link" onclick="toggleSubmenu('categoriasSubmenu')">
+                        <i class="nav-icon" data-lucide="tag"></i> <span>Categorías</span>
+                    </a>
+                    <ul class="nav flex-column" id="categoriasSubmenu" style="display:none;">
+                        <li><a href="#" class="nav-link" onclick="showCategory('vestidos')">Vestidos</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('faldas')">Faldas</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('pantalones')">Pantalones</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('polos')">Polos</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('poleras')">Poleras</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('zapatos')">Zapatos</a></li>
+                        <li><a href="#" class="nav-link" onclick="showCategory('accesorios')">Accesorios</a></li>
+                    </ul>
+                </li>
+            
+                <li><a href="#" class="nav-link" onclick="showContent('inventario')"><i class="nav-icon" data-lucide="archive"></i> <span>Inventario</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('clientes')"><i class="nav-icon" data-lucide="users"></i> <span>Cliente</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('ventas')"><i class="nav-icon" data-lucide="shopping-bag"></i> <span>Ventas</span></a></li>
+                <li><a href="#" class="nav-link" onclick="showContent('reportes')"><i class="nav-icon" data-lucide="bar-chart"></i> <span>Reportes</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main content -->
+        <div class="flex-grow-1 d-flex flex-column overflow-hidden">
+            <!-- Top bar -->
+            <header id="topbar" class="navbar navbar-expand-lg navbar-dark shadow-sm">
+                <div class="container-fluid">
+                    <button id="sidebarToggle" class="btn btn-link d-md-none">
+                        <i data-lucide="menu" class="text-white"></i>
+                    </button>
+                    <a class="navbar-brand text-white" href="#">MYUWEB</a>
+                    <div class="d-flex align-items-center">
+                        <i data-lucide="mail" class="text-white me-3"></i>
+                        <i data-lucide="bell" class="text-white me-3"></i>
+                        <i data-lucide="shopping-bag" class="text-white me-3"></i>
+                        <img src="https://scontent.flim31-1.fna.fbcdn.net/v/t39.30808-6/342183012_279359097759672_146673611003331041_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=OgPyRVHmb0YQ7kNvgEmMXTY&_nc_ht=scontent.flim31-1.fna&oh=00_AYDiu8idiMi_it3J0OvN00Jg9llbspsVLAxhuvGBslzbsQ&oe=6703381F" alt="User" class="rounded-circle me-2" width="40" height="40">
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content area -->
+            <main class="flex-grow-1 overflow-auto p-4" id="content">
+                <!-- Aquí se mostrará el contenido dinámico -->
+                <div id="productos" class="content-section" style="display: none;">
+                    <h2>Gestión de Productos</h2>
+                    <p>
+                          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+                          <style>
+                            .container {
+                              max-width: 900px;
+                            }
+                            .table th, .table td {
+                              vertical-align: middle;
+                            }
+                            .btn-edit, .btn-delete {
+                              margin-right: 5px;
+                            }
+                          </style>
+                        </head>
+                        <body>
+                        
+                          <div class="container">
+                            <h1 class="text-center my-4">Gestión de Productos</h1>
+                        
+                            <!-- Botón para agregar producto -->
+                            <button class="btn btn-success mb-4" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="limpiarFormulario()">Agregar Producto</button>
+                        
+                            <!-- Tabla de productos -->
+                            <table class="table table-bordered table-striped">
+                              <thead class="table-dark">
+                                <tr>
+                                  <th>ID</th>
+                                  <th>Nombre</th>
+                                  <th>Descripción</th>
+                                  <th>Precio</th>
+                                  <th>Stock</th>
+                                  <th>Categoría</th>
+                                  <th>Imagen 1</th>
+                                  <th>Imagen 2</th>
+                                  <th>Imagen 3</th>
+                                  <th>Imagen 4</th>
+                                  <th>Acciones</th>
+                                </tr>
+                              </thead>
+                              <tbody id="tablaProductos">
+                                <!-- Los productos se cargarán aquí desde la base de datos -->
+                              </tbody>
+                            </table>
+                          </div>
+                        
+                          <!-- Modal para agregar/editar producto -->
+                          <div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar Producto</h5>
+                                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                  <form id="formProducto">
+                                    <div class="mb-3">
+                                      <label for="nombre" class="form-label">Nombre del Producto</label>
+                                      <input type="text" class="form-control" id="nombre" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="descripcion" class="form-label">Descripción</label>
+                                      <input type="text" class="form-control" id="descripcion" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="precio" class="form-label">Precio</label>
+                                      <input type="number" class="form-control" id="precio" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="stock" class="form-label">Stock</label>
+                                      <input type="number" class="form-control" id="stock" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="categoria" class="form-label">Categoría</label>
+                                      <select class="form-select" id="categoria" required>
+                                        <option value="" disabled>Selecciona una categoría</option>
+                                        <option value="Vestidos">Vestidos</option>
+                                        <option value="Faldas">Faldas</option>
+                                        <option value="Pantalones">Pantalones</option>
+                                        <option value="Polos">Polos</option>
+                                        <option value="Poleras">Poleras</option>
+                                        <option value="Zapatos">Zapatos</option>
+                                        <option value="Accesorios">Accesorios</option>
+                                      </select>
+                                    </div>      
+                                    <div class="mb-3">
+                                      <label for="imagen1" class="form-label">URL Imagen 1</label>
+                                      <input type="text" class="form-control" id="imagen1" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="imagen2" class="form-label">URL Imagen 2</label>
+                                      <input type="text" class="form-control" id="imagen2" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="imagen3" class="form-label">URL Imagen 3</label>
+                                      <input type="text" class="form-control" id="imagen3" required>
+                                    </div>
+                                    <div class="mb-3">
+                                      <label for="imagen4" class="form-label">URL Imagen 4</label>
+                                      <input type="text" class="form-control" id="imagen4" required>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        
+                          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+                          <script src="../scripts/app.js"></script>
+                        </body>
+                    </p>
+                </div>
+                <div id="categorias" class="content-section" style="display: none;">
+                    <h2>Gestión de Categorías</h2>
+                    <p>Aquí puedes gestionar las categorías de productos.</p>
+                </div>
+                <div id="inventario" class="content-section" style="display: none;">
+                    <h2>Gestión de Inventario</h2>
+                    <p>Aquí puedes controlar las existencias de los productos.</p>
+                </div>
+                <div id="clientes" class="content-section" style="display: none;">
+                    <h2>Gestión de Clientes</h2>
+                    <p>Aquí puedes gestionar la información de los clientes.</p>
+                </div>
+                <div id="ventas" class="content-section" style="display: none;">
+                    <h2>Gestión de Ventas</h2>
+                    <p>Aquí puedes gestionar tus ventas.</p>
+                </div>
+                <div id="reportes" class="content-section" style="display: none;">
+                    <h2>Reportes de Ventas</h2>
+                    <p>Aquí puedes revisar los reportes de ventas.</p>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script>
+        // Función para cambiar de contenido
+        export const showContent = (section) => {
+            document.querySelectorAll('.content-section').forEach(div => {
+                div.style.display = 'none';
+            });
+            document.getElementById(section).style.display = 'block';
+        };
+
+        // Mostrar la primera sección de productos al cargar la página
+        export const initializeContent = () => {
+            document.querySelector('[onclick="showContent(\'productos\')"]').click();
+        };
+
+        // Evento para colapsar el sidebar
+        export const initializeSidebarToggle = () => {
+            const sidebar = document.getElementById('sidebar');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+
+            hamburgerBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('collapsed');
+            });
+        };
+
+        // Cargar íconos al cargar la página
+        export const loadIcons = () => {
+            document.addEventListener('DOMContentLoaded', function () {
+                lucide.createIcons();
+            });
+        };
+
+        export const toggleSubmenu = (id) => {
+            const submenu = document.getElementById(id);
+            submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+        };
+
+        export const showCategory = (category) => {
+            console.log("Mostrando la categoría:", category);
+            // Aquí puedes agregar la lógica para cargar el contenido de la categoría seleccionada
+        };
+
+    </script>
+</body>
+</html>
