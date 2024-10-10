@@ -1,0 +1,96 @@
+<h2 class="text-2xl font-bold mb-4">Gestión de Productos</h2>
+
+<div class="container mx-auto">
+    <h1 class="text-center text-3xl my-4">INICIO</h1>
+
+    <!-- Botón para agregar producto -->
+    <button class="bg-green-500 text-white px-4 py-2 rounded mb-4" onclick="limpiarFormulario()" data-bs-toggle="modal" data-bs-target="#modalProducto">
+        Agregar Producto
+    </button>
+
+    <!-- Tabla de productos -->
+    <table class="min-w-full border border-gray-300">
+        <thead class="bg-gray-800 text-white">
+            <tr>
+                <th class="border px-4 py-2">ID</th>
+                <th class="border px-4 py-2">Nombre</th>
+                <th class="border px-4 py-2">Descripción</th>
+                <th class="border px-4 py-2">Precio</th>
+                <th class="border px-4 py-2">Stock</th>
+                <th class="border px-4 py-2">Categoría</th>
+                <th class="border px-4 py-2">Imagen 1</th>
+                <th class="border px-4 py-2">Imagen 2</th>
+                <th class="border px-4 py-2">Imagen 3</th>
+                <th class="border px-4 py-2">Imagen 4</th>
+                <th class="border px-4 py-2">Acciones</th>
+            </tr>
+        </thead>
+        <tbody id="tablaProductos">
+            <!-- Los productos se cargarán aquí desde la base de datos -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal para agregar/editar producto -->
+<div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalProductoLabel">Agregar/Editar Producto</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="formProducto">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre del Producto</label>
+                        <input type="text" class="form-control" id="nombre" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <input type="text" class="form-control" id="descripcion" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="precio" class="form-label">Precio</label>
+                        <input type="number" class="form-control" id="precio" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="stock" class="form-label">Stock</label>
+                        <input type="number" class="form-control" id="stock" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="categoria" class="form-label">Categoría</label>
+                        <select class="form-select" id="categoria" required>
+                            <option value="" disabled>Selecciona una categoría</option>
+                            <option value="Vestidos">Vestidos</option>
+                            <option value="Faldas">Faldas</option>
+                            <option value="Pantalones">Pantalones</option>
+                            <option value="Polos">Polos</option>
+                            <option value="Poleras">Poleras</option>
+                            <option value="Zapatos">Zapatos</option>
+                            <option value="Accesorios">Accesorios</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen1" class="form-label">URL Imagen 1</label>
+                        <input type="text" class="form-control" id="imagen1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen2" class="form-label">URL Imagen 2</label>
+                        <input type="text" class="form-control" id="imagen2" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen3" class="form-label">URL Imagen 3</label>
+                        <input type="text" class="form-control" id="imagen3" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="imagen4" class="form-label">URL Imagen 4</label>
+                        <input type="text" class="form-control" id="imagen4" required>
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar Producto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../scripts/app.js"></script>
