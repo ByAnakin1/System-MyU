@@ -1,0 +1,96 @@
+---
+import Interfaz from "../components/interfaz.astro"
+---
+
+<Interfaz />
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Accesorios</title>
+</head>
+<body>
+    <h1>Agregar Producto</h1>
+    <form id="addProductForm">
+        <label for="id_cat_accesorios">Categoría:</label>
+        <input type="number" id="id_cat_accesorios" required><br><br>
+
+        <label for="nombre">Nombre:</label>
+        <input type="text" id="nombre" required><br><br>
+
+        <label for="descripcion">Descripción:</label>
+        <input type="text" id="descripcion" required><br><br>
+
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" step="0.01" required><br><br>
+
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" required><br><br>
+
+        <label for="imagen1">Imagen 1:</label>
+        <input type="text" id="imagen1"><br><br>
+
+        <label for="imagen2">Imagen 2:</label>
+        <input type="text" id="imagen2"><br><br>
+
+        <label for="imagen3">Imagen 3:</label>
+        <input type="text" id="imagen3"><br><br>
+
+        <label for="imagen4">Imagen 4:</label>
+        <input type="text" id="imagen4"><br><br>
+
+        <label for="estado">Estado:</label>
+        <input type="text" id="estado" required><br><br>
+
+        <button type="submit">Guardar Producto</button>
+    </form>
+
+    <script type="module">
+        document.getElementById('addProductForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const id_cat_accesorios = document.getElementById('id_cat_accesorios').value;
+            const nombre = document.getElementById('nombre').value;
+            const descripcion = document.getElementById('descripcion').value;
+            const precio = document.getElementById('precio').value;
+            const stock = document.getElementById('stock').value;
+            const imagen1 = document.getElementById('imagen1').value;
+            const imagen2 = document.getElementById('imagen2').value;
+            const imagen3 = document.getElementById('imagen3').value;
+            const imagen4 = document.getElementById('imagen4').value;
+            const estado = document.getElementById('estado').value;
+
+            const response = await fetch('http://localhost:3000/productos_accesorios', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    id_cat_accesorios,
+                    nombre,
+                    descripcion,
+                    precio,
+                    stock,
+                    imagen1,
+                    imagen2,
+                    imagen3,
+                    imagen4,
+                    estado
+                })
+            });
+
+            const result = await response.json();
+            console.log(result);
+            if (response.ok) {
+                alert('Producto guardado con éxito');
+                // Aquí puedes limpiar el formulario o redirigir al usuario
+                document.getElementById('addProductForm').reset();
+            } else {
+                alert('Error al guardar el producto: ' + result.error);
+            }
+        });
+    </script>
+</body>
+</html>
