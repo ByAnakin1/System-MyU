@@ -1,19 +1,14 @@
-// db.js
-const mysql = require('mysql');
+// src/scripts/db.js
+import { Pool } from 'pg'; // Importamos Pool desde pg
 
-const connection = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: '',
-    database: 'myu-bases'
+const pool = new Pool({
+    user: 'localhost',         // Cambia esto con tus credenciales
+    host: 'root',
+    database: 'myu_basedatos',
+    password: '',                 // El puerto que usas para PostgreSQL
 });
 
-connection.connect(err => {
-    if (err) {
-        console.error('Error conectando a la base de datos:', err);
-        return;
-    }
-    console.log('Conexión a la base de datos exitosa.');
-});
-
-module.exports = connection;
+// Exportamos el pool para usar en otras partes del proyecto
+export default {
+    query: (text, params) => pool.query(text, params),
+};
