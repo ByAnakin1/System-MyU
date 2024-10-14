@@ -1,0 +1,181 @@
+---
+import Interfaz from "../components/interfaz.astro"
+---
+
+<Interfaz />
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Compra - Administrador</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: white;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            text-align: center;
+        }
+
+        .container {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 2px solid white; /* Bordes alrededor de las celdas */
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            font-size: 1.2rem;
+        }
+
+        td {
+            font-size: 1rem;
+        }
+
+        .acciones-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Espacio entre botones */
+        }
+
+        /* Botones de acuerdo con el diseño original */
+        .confirmar {
+            background-color: #28a745; /* Verde */
+            color: white;
+            padding: 8px 16px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .eliminar {
+            background-color: #dc3545; /* Rojo */
+            color: white;
+            padding: 8px 16px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <br><br><br><br>
+    <div class="container">
+        <h1>SOLICITUD DE COMPRA</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>PRODUCTO</th>
+                    <th>CATEGORÍA</th>
+                    <th>PRECIO (S/.)</th>
+                    <th>STOCK</th>
+                    <th>IMÁGENES</th>
+                    <th>ESTADO</th>
+                </tr>
+            </thead>
+            <tbody id="solicitudesTabla">
+                <!-- Aquí se cargarán las solicitudes dinámicamente -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Lista de solicitudes simulada (esto provendría de una API o backend)
+        const solicitudesCompra = [
+            {
+                id: 1,
+                nombre: "Pantalón de Algodón",
+                categoria: "Ropa",
+                precio: 39.99,
+                stock: 20,
+                imagen: "Imagenes/Pantalon.jpg"
+            },
+            {
+                id: 2,
+                nombre: "Pantalón Deportivo",
+                categoria: "Ropa",
+                precio: 29.99,
+                stock: 10,
+                imagen: "Imagenes/Deportivo.jpg"
+            }
+        ];
+
+        // Función para renderizar las solicitudes en la tabla
+        function cargarSolicitudes() {
+            const tabla = document.getElementById('solicitudesTabla');
+            if (tabla) {
+                solicitudesCompra.forEach(solicitud => {
+                    const fila = document.createElement('tr');
+                    fila.innerHTML = `
+                        <td style="border: 2px solid white;">${solicitud.nombre}</td>
+                        <td style="border: 2px solid white;">${solicitud.categoria}</td>
+                        <td style="border: 2px solid white;">S/${solicitud.precio.toFixed(2)}</td>
+                        <td style="border: 2px solid white;">${solicitud.stock}</td>
+                        <td style="border: 2px solid white;"><img src="${solicitud.imagen}" alt="${solicitud.nombre}" width="100"></td>
+                        <td style="border: 2px solid white;">
+                            <div class="acciones-container">
+                                <button class="confirmar" onclick="aceptarCompra(${solicitud.id})">Confirmar</button>
+                                <button class="eliminar" onclick="rechazarCompra(${solicitud.id})">Eliminar</button>
+                            </div>
+                        </td>
+                    `;
+                    tabla.appendChild(fila);
+                });
+            } else {
+                console.error("El elemento de la tabla no se encontró.");
+            }
+        }
+
+        // Funciones para manejar la aceptación o rechazo de la solicitud
+function aceptarCompra(id: number): void { 
+    alert(`Compra con ID ${id} ha sido aceptada.`);
+    // Aquí iría una solicitud al backend para procesar la aceptación
+}
+
+function rechazarCompra(id: number): void { 
+    alert(`Compra con ID ${id} ha sido rechazada.`);
+    // Aquí iría una solicitud al backend para procesar el rechazo
+}
+
+        // Cargar las solicitudes al cargar la página
+        window.onload = cargarSolicitudes;
+    </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

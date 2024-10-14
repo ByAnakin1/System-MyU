@@ -1,0 +1,316 @@
+---
+import Interfaz from "../components/interfaz.astro"
+---
+<!-- Importación del componente Interfaz -->
+<Interfaz />
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Metadatos y configuración básica del documento -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitud de Compra - Administrador</title>
+    <!-- Enlace a Bootstrap CSS para estilos -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Estilos personalizados para el contenedor CRUD */
+        .crud-container {
+            margin-top: -55px; /* Ajusta este valor para mover el CRUD hacia arriba */
+            margin-left: 300px; /* Ajusta este valor para mover el CRUD hacia la derecha */
+            padding: 20px;
+        }
+        /* Estilos responsivos para pantallas pequeñas */
+        @media (max-width: 768px) {
+            .crud-container {
+                margin-left: 0;
+                margin-top: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Contenedor principal para el CRUD de productos -->
+    <div class="crud-container">
+        <h1 class="text-center mb-4">Solicitud de Compra - Administrador</h1>
+
+        <!-- Sección de acciones: agregar producto y buscar -->
+        <div class="d-flex justify-content-start mb-3">
+            <!-- Botón para abrir el modal de agregar producto -->
+            <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="prepararFormulario()">Agregar Producto</button>
+            
+            <!-- Campo de búsqueda de productos -->
+            <input type="text" class="form-control w-50" id="buscarProducto" placeholder="Buscar producto..." oninput="buscarProducto()">
+        </div>
+
+        <!-- Tabla responsiva para listar los productos -->
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Imagen 1</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaProductos">
+                    <!-- Aquí se cargarán los productos dinámicamente -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Modal para agregar o editar un producto -->
+    <div class="modal fade" id="modalProducto" tabindex="-1" aria-labelledby="modalProductoLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- Encabezado del modal -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalProductoLabel">Agregar Producto</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <!-- Cuerpo del modal con el formulario -->
+                <div class="modal-body">
+                    <form id="formProducto">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="descripcion" class="form-label">Descripción del Producto</label>
+                            <textarea class="form-control" id="descripcion" required></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="precio" class="form-label">Precio</label>
+                            <input type="number" class="form-control" id="precio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="stock" class="form-label">Stock</label>
+                            <input type="number" class="form-control" id="stock" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="imagen1" class="form-label">Imagen 1</label>
+                            <input type="text" class="form-control" id="imagen1" placeholder="URL de la imagen">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Guardar Producto</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inclusión de Bootstrap JS para funcionalidades interactivas -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Variables globales para almacenar los productos
+        let productos = [];
+
+        // Función para limpiar el formulario del modal
+        function limpiarFormulario() {
+            document.getElementById('formProducto').reset();
+            delete document.getElementById('nombre').dataset.id;
+        }
+
+        // Función para preparar el formulario para agregar un nuevo producto
+        function prepararFormulario() {
+            limpiarFormulario();
+            document.getElementById('modalProductoLabel').textContent = 'Agregar Producto';
+        }
+
+        // Función para editar un producto existente
+        function editarProducto(id) {
+            const producto = productos.find(p => p.id === id);
+            if (producto) {
+                document.getElementById('modalProductoLabel').textContent = 'Editar Producto';
+                document.getElementById('nombre').value = producto.nombre;
+                document.getElementById('descripcion').value = producto.descripcion;
+                document.getElementById('precio').value = producto.precio;
+                document.getElementById('stock').value = producto.stock;
+                document.getElementById('imagen1').value = producto.imagen1;
+                document.getElementById('nombre').dataset.id = id;
+                new bootstrap.Modal(document.getElementById('modalProducto')).show();
+            }
+        }
+
+        // Función para eliminar un producto de la lista localmente
+        function eliminarProductoLocal(id) {
+            productos = productos.filter(producto => producto.id !== id);
+            mostrarProductos();
+        }
+
+        // Función para rechazar un producto y enviarlo a otra base de datos
+        async function rechazarProducto(id) {
+            const producto = productos.find(p => p.id === id);
+            if (producto) {
+                try {
+                    // Enviar solicitud POST al endpoint de rechazo
+                    const response = await fetch('/api/rechazarProducto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(producto)
+                    });
+
+                    if (response.ok) {
+                        alert('Producto rechazado y enviado a la base de datos de rechazos.');
+                        eliminarProductoLocal(id); // Eliminar el producto de la lista local
+                    } else {
+                        alert('Error al rechazar el producto.');
+                    }
+                } catch (error) {
+                    console.error('Error al rechazar el producto:', error);
+                    alert('Error al rechazar el producto.');
+                }
+            }
+        }
+
+        // Función para confirmar un producto y enviarlo a la base de datos principal
+        async function confirmarProducto(id) {
+            const producto = productos.find(p => p.id === id);
+            if (producto) {
+                try {
+                    // Enviar solicitud POST al endpoint de confirmación
+                    const response = await fetch('/api/confirmarProducto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(producto)
+                    });
+
+                    if (response.ok) {
+                        alert('Producto confirmado y enviado a la base de datos principal.');
+                        eliminarProductoLocal(id); // Eliminar el producto de la lista local
+                    } else {
+                        alert('Error al confirmar el producto.');
+                    }
+                } catch (error) {
+                    console.error('Error al confirmar el producto:', error);
+                    alert('Error al confirmar el producto.');
+                }
+            }
+        }
+
+        // Función para buscar productos en la lista
+        function buscarProducto() {
+            const query = document.getElementById('buscarProducto').value.toLowerCase();
+            const filteredProducts = productos.filter(producto => producto.nombre.toLowerCase().includes(query));
+        mostrarProductos(filteredProducts);
+}
+
+        // Función para mostrar los productos en la tabla
+        function mostrarProductos(filteredProducts = productos) {
+            const tablaProductos = document.getElementById('tablaProductos');
+            tablaProductos.innerHTML = '';
+
+            filteredProducts.forEach(producto => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${producto.id}</td>
+                    <td>${producto.nombre}</td>
+                    <td>${producto.descripcion}</td>
+                    <td>${producto.precio}</td>
+                    <td>${producto.stock}</td>
+                    <td><img src="${producto.imagen1}" alt="Imagen 1" width="50"></td>
+                    <td>
+                        <button class="btn btn-success btn-sm me-2" onclick="confirmarProducto(${producto.id})">Confirmar</button>
+                        <button class="btn btn-danger btn-sm" onclick="rechazarProducto(${producto.id})">Rechazar</button>
+                    </td>
+                `;
+                tablaProductos.appendChild(row);
+            });
+        }
+
+        // Función para manejar el envío del formulario (agregar o editar producto)
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('formProducto').addEventListener('submit', async function(event) {
+                event.preventDefault();
+
+                const id = parseInt(document.getElementById('nombre').dataset.id) || (productos.length + 1);
+                const nuevoProducto = {
+                    id: id,
+                    nombre: document.getElementById('nombre').value,
+                    descripcion: document.getElementById('descripcion').value,
+                    precio: parseFloat(document.getElementById('precio').value),
+                    stock: parseInt(document.getElementById('stock').value),
+                    imagen1: document.getElementById('imagen1').value,
+                };
+
+                const indice = productos.findIndex(producto => producto.id === id);
+                if (indice > -1) {
+                    // Actualizar producto existente en la lista local
+                    productos[indice] = nuevoProducto;
+                } else {
+                    // Agregar nuevo producto a la lista local
+                    productos.push(nuevoProducto);
+                }
+
+                // Mostrar los productos actualizados en la tabla
+                mostrarProductos();
+                // Limpiar el formulario del modal
+                limpiarFormulario();
+                // Cerrar el modal
+                new bootstrap.Modal(document.getElementById('modalProducto')).hide();
+
+                // Opcional: Enviar el nuevo o actualizado producto a la base de datos principal
+                try {
+                    const response = await fetch('/api/guardarProducto', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(nuevoProducto)
+                    });
+
+                    if (response.ok) {
+                        console.log('Producto guardado exitosamente.');
+                    } else {
+                        console.error('Error al guardar el producto.');
+                    }
+                } catch (error) {
+                    console.error('Error al guardar el producto:', error);
+                }
+            });
+
+            // Mostrar productos iniciales (si los hubiera)
+            mostrarProductos();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //  Funciones para manejar la aceptación o rechazo de la solicitud
+//function aceptarCompra(id: number): void { 
+   // alert(`Compra con ID ${id} ha sido aceptada.`);
+    // Aquí iría una solicitud al backend para procesar la aceptación
+}
+
+//function rechazarCompra(id: number): void { 
+   // alert(`Compra con ID ${id} ha sido rechazada.`);
+    // Aquí iría una solicitud al backend para procesar el rechazo
+} 
+
+        
