@@ -10,7 +10,7 @@ const dbConfig = {
     host: 'localhost',
     user: 'root', // Cambia si tienes otro usuario
     password: '', // Cambia si tienes contraseña
-    database: 'myu_basedatos' // Asegúrate de que este nombre es correcto
+    database: 'bd_myu' // Asegúrate de que este nombre es correcto
 };
 
 // Middleware

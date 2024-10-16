@@ -30,7 +30,7 @@ import Interfaz from "../components/interfaz.astro"
     </style>
 </head>
 <body>
-    <!-- Contenedor principal para el CRUD de productos -->
+    <!-- Contenedor principal para el CRUD de solicitudes de compra -->
     <div class="crud-container">
         <h1 class="text-center mb-4">Solicitud de Compra - Administrador</h1>
 
@@ -53,7 +53,7 @@ import Interfaz from "../components/interfaz.astro"
                         <th>Descripción</th>
                         <th>Precio</th>
                         <th>Stock</th>
-                        <th>Imagen 1</th>
+                        <th>Imagenes</th>
                         <th>Acciones</th>
                     </tr>
                 </thead>
@@ -93,8 +93,8 @@ import Interfaz from "../components/interfaz.astro"
                             <input type="number" class="form-control" id="stock" required>
                         </div>
                         <div class="mb-3">
-                            <label for="imagen1" class="form-label">Imagen 1</label>
-                            <input type="text" class="form-control" id="imagen1" placeholder="URL de la imagen">
+                            <label for="imagenes" class="form-label">Imagenes</label>
+                            <input type="text" class="form-control" id="imagenes" placeholder="URL de la imagen">
                         </div>
                         <button type="submit" class="btn btn-primary">Guardar Producto</button>
                     </form>
@@ -130,7 +130,7 @@ import Interfaz from "../components/interfaz.astro"
                 document.getElementById('descripcion').value = producto.descripcion;
                 document.getElementById('precio').value = producto.precio;
                 document.getElementById('stock').value = producto.stock;
-                document.getElementById('imagen1').value = producto.imagen1;
+                document.getElementById('imagenes').value = producto.imagenes;
                 document.getElementById('nombre').dataset.id = id;
                 new bootstrap.Modal(document.getElementById('modalProducto')).show();
             }
@@ -200,8 +200,8 @@ import Interfaz from "../components/interfaz.astro"
         function buscarProducto() {
             const query = document.getElementById('buscarProducto').value.toLowerCase();
             const filteredProducts = productos.filter(producto => producto.nombre.toLowerCase().includes(query));
-        mostrarProductos(filteredProducts);
-}
+            mostrarProductos(filteredProducts);
+        }
 
         // Función para mostrar los productos en la tabla
         function mostrarProductos(filteredProducts = productos) {
@@ -216,8 +216,9 @@ import Interfaz from "../components/interfaz.astro"
                     <td>${producto.descripcion}</td>
                     <td>${producto.precio}</td>
                     <td>${producto.stock}</td>
-                    <td><img src="${producto.imagen1}" alt="Imagen 1" width="50"></td>
+                    <td><img src="${producto.imagenes}" alt="Imagenes" width="50"></td>
                     <td>
+                        <button class="btn btn-primary btn-sm me-2" onclick="editarProducto(${producto.id})">Editar</button>
                         <button class="btn btn-success btn-sm me-2" onclick="confirmarProducto(${producto.id})">Confirmar</button>
                         <button class="btn btn-danger btn-sm" onclick="rechazarProducto(${producto.id})">Rechazar</button>
                     </td>
@@ -231,14 +232,15 @@ import Interfaz from "../components/interfaz.astro"
             document.getElementById('formProducto').addEventListener('submit', async function(event) {
                 event.preventDefault();
 
-                const id = parseInt(document.getElementById('nombre').dataset.id) || (productos.length + 1);
+                const id = parseInt(document.getElementById('nombre').dataset.id) || (productos.length > 0 ? Math.max(...productos.map(p => p.id)) + 1 : 1);
                 const nuevoProducto = {
                     id: id,
                     nombre: document.getElementById('nombre').value,
                     descripcion: document.getElementById('descripcion').value,
                     precio: parseFloat(document.getElementById('precio').value),
                     stock: parseInt(document.getElementById('stock').value),
-                    imagen1: document.getElementById('imagen1').value,
+                    imagenes: document.getElementById('imagenes').value,
+                    estado: 'pendiente' // Puedes establecer un valor predeterminado para 'estado'
                 };
 
                 const indice = productos.findIndex(producto => producto.id === id);
@@ -257,9 +259,9 @@ import Interfaz from "../components/interfaz.astro"
                 // Cerrar el modal
                 new bootstrap.Modal(document.getElementById('modalProducto')).hide();
 
-                // Opcional: Enviar el nuevo o actualizado producto a la base de datos principal
+                // Enviar el nuevo o actualizado producto a la base de datos principal
                 try {
-                    const response = await fetch('/api/guardarProducto', {
+                    const response = await fetch('/solicitudes_compra', { // Actualizado a la ruta correcta
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -268,17 +270,25 @@ import Interfaz from "../components/interfaz.astro"
                     });
 
                     if (response.ok) {
-                        console.log('Producto guardado exitosamente.');
+                        console.log('Producto guardado exitosamente en la base de datos.');
                     } else {
-                        console.error('Error al guardar el producto.');
+                        console.error('Error al guardar el producto en la base de datos.');
                     }
                 } catch (error) {
-                    console.error('Error al guardar el producto:', error);
+                    console.error('Error al guardar el producto en la base de datos:', error);
                 }
             });
 
-            // Mostrar productos iniciales (si los hubiera)
-            mostrarProductos();
+            // Obtener productos iniciales desde la base de datos
+            fetch('/api/productos')
+                .then(response => response.json())
+                .then(data => {
+                    productos = data;
+                    mostrarProductos();
+                })
+                .catch(error => {
+                    console.error('Error al obtener los productos iniciales:', error);
+                });
         });
     </script>
 </body>
@@ -297,20 +307,3 @@ import Interfaz from "../components/interfaz.astro"
 
 
 
-
-
-
-
-
-        //  Funciones para manejar la aceptación o rechazo de la solicitud
-//function aceptarCompra(id: number): void { 
-   // alert(`Compra con ID ${id} ha sido aceptada.`);
-    // Aquí iría una solicitud al backend para procesar la aceptación
-}
-
-//function rechazarCompra(id: number): void { 
-   // alert(`Compra con ID ${id} ha sido rechazada.`);
-    // Aquí iría una solicitud al backend para procesar el rechazo
-} 
-
-        
