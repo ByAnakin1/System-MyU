@@ -10,7 +10,7 @@ const dbConfig = {
     host: 'localhost',
     user: 'root', // Cambia si tienes otro usuario
     password: '', // Cambia si tienes contraseña
-    database: 'bd_myu' // Asegúrate de que este nombre es correcto
+    database: 'myu_basedatos' // Asegúrate de que este nombre es correcto
 };
 
 // Middleware
@@ -32,7 +32,7 @@ app.get('/api/productos', async (req, res) => {
 // Ruta para agregar un nuevo producto
 app.post('/api/productos', async (req, res) => {
     const { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 } = req.body;
-n
+
     // Validar que todos los campos requeridos están presentes
     if (!nombre || !descripcion || !precio || !stock) {
         return res.status(400).json({ error: 'Todos los campos son requeridos.' });
