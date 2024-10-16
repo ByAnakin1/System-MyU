@@ -32,7 +32,7 @@ app.get('/api/productos', async (req, res) => {
 // Ruta para agregar un nuevo producto
 app.post('/api/productos', async (req, res) => {
     const { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 } = req.body;
-
+n
     // Validar que todos los campos requeridos están presentes
     if (!nombre || !descripcion || !precio || !stock) {
         return res.status(400).json({ error: 'Todos los campos son requeridos.' });
