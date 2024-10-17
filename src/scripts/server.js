@@ -197,7 +197,141 @@ app.delete('/api/pantalones/:id', async (req, res) => {
     }
 });
 
-// Iniciar el servidor
+app.get('/api/polos', async (req, res) => {
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [polos] = await db.query('SELECT * FROM productos_polos');
+        res.json(polos);
+    } catch (error) {
+        console.error('Error al obtener polos:', error);
+        res.status(500).json({ error: 'Error al obtener polos' });
+    }
+});
+
+app.post('/api/polos', async (req, res) => {
+    const { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 } = req.body;
+
+    if (!nombre || !descripcion || !precio || !stock) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos.' });
+    }
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [result] = await db.query(
+            'INSERT INTO productos_polos (id_cat_polos, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [4, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4] // id_cat_polos = 4
+        );
+        res.status(201).json({ message: 'Producto de polos agregado', productId: result.insertId });
+    } catch (error) {
+        console.error('Error al agregar producto de polos:', error);
+        res.status(500).json({ error: 'Error al agregar producto de polos. Asegúrate de que la base de datos esté configurada correctamente.' });
+    }
+});
+
+app.delete('/api/polos/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        await db.query('DELETE FROM productos_polos WHERE id = ?', [id]);
+        res.status(204).send();
+    } catch (error) {
+        console.error('Error al eliminar producto de polos:', error);
+        res.status(500).json({ error: 'Error al eliminar producto de polos' });
+    }
+});
+
+// Rutas para productos de poleras
+app.get('/api/poleras', async (req, res) => {
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [poleras] = await db.query('SELECT * FROM productos_poleras');
+        res.json(poleras);
+    } catch (error) {
+        console.error('Error al obtener poleras:', error);
+        res.status(500).json({ error: 'Error al obtener poleras' });
+    }
+});
+
+app.post('/api/poleras', async (req, res) => {
+    const { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 } = req.body;
+
+    if (!nombre || !descripcion || !precio || !stock) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos.' });
+    }
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [result] = await db.query(
+            'INSERT INTO productos_poleras (id_cat_poleras, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [5, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4] // id_cat_poleras = 5
+        );
+        res.status(201).json({ message: 'Producto de poleras agregado', productId: result.insertId });
+    } catch (error) {
+        console.error('Error al agregar producto de poleras:', error);
+        res.status(500).json({ error: 'Error al agregar producto de poleras. Asegúrate de que la base de datos esté configurada correctamente.' });
+    }
+});
+
+app.delete('/api/poleras/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        await db.query('DELETE FROM productos_poleras WHERE id = ?', [id]);
+        res.status(204).send();
+    } catch (error) {
+        console.error('Error al eliminar producto de poleras:', error);
+        res.status(500).json({ error: 'Error al eliminar producto de poleras' });
+    }
+});
+
+// Rutas para productos de zapatos
+app.get('/api/zapatos', async (req, res) => {
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [zapatos] = await db.query('SELECT * FROM productos_zapatos');
+        res.json(zapatos);
+    } catch (error) {
+        console.error('Error al obtener zapatos:', error);
+        res.status(500).json({ error: 'Error al obtener zapatos' });
+    }
+});
+
+app.post('/api/zapatos', async (req, res) => {
+    const { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 } = req.body;
+
+    if (!nombre || !descripcion || !precio || !stock) {
+        return res.status(400).json({ error: 'Todos los campos son requeridos.' });
+    }
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        const [result] = await db.query(
+            'INSERT INTO productos_zapatos (id_cat_zapatos, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
+            [6, nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4] // id_cat_zapatos = 6
+        );
+        res.status(201).json({ message: 'Producto de zapatos agregado', productId: result.insertId });
+    } catch (error) {
+        console.error('Error al agregar producto de zapatos:', error);
+        res.status(500).json({ error: 'Error al agregar producto de zapatos. Asegúrate de que la base de datos esté configurada correctamente.' });
+    }
+});
+
+app.delete('/api/zapatos/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const db = await mysql.createConnection(dbConfig);
+        await db.query('DELETE FROM productos_zapatos WHERE id = ?', [id]);
+        res.status(204).send();
+    } catch (error) {
+        console.error('Error al eliminar producto de zapatos:', error);
+        res.status(500).json({ error: 'Error al eliminar producto de zapatos' });
+    }
+});
+
+// Inicia el servidor
 app.listen(port, () => {
-    console.log(`Servidor Express escuchando en el puerto ${port}`);
+    console.log(`Servidor corriendo en http://localhost:${port}`);
 });
