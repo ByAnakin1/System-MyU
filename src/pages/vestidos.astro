@@ -182,7 +182,7 @@ import Interfaz from "../components/interfaz.astro"
             if (id) {
                 // Lógica para editar producto existente
                 await fetch(`http://localhost:3000/api/vestidos/${id}`, {
-                    method: 'PUT', // Usa PUT para editar (debes manejarlo en el servidor)
+                    method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json'
                     },
@@ -214,8 +214,8 @@ import Interfaz from "../components/interfaz.astro"
                 let encontrado = false;
 
                 for (let j = 0; j < celdas.length; j++) {
-                    const contenido = celdas[j].innerText.toLowerCase();
-                    if (contenido.includes(filtro)) {
+                    const celda = celdas[j];
+                    if (celda.textContent.toLowerCase().includes(filtro)) {
                         encontrado = true;
                         break;
                     }
@@ -225,16 +225,25 @@ import Interfaz from "../components/interfaz.astro"
             }
         }
 
-        async function editarProducto(id) {
-            const response = await fetch(`http://localhost:3000/api/vestidos/${id}`);
-            const producto = await response.json();
+        function editarProducto(id) {
+            const producto = {
+                // Simulando la obtención de producto por ID
+                id: id,
+                nombre: `Vestido ${id}`, // Deberías implementar la lógica para obtener los datos reales
+                descripcion: `Descripción del vestido ${id}`,
+                precio: (id * 10).toFixed(2),
+                stock: id * 2,
+                imagen1: `imagen${id}1.jpg`,
+                imagen2: `imagen${id}2.jpg`,
+                imagen3: `imagen${id}3.jpg`,
+                imagen4: `imagen${id}4.jpg`,
+            };
             prepararFormulario(producto);
-            const modal = new bootstrap.Modal(document.getElementById('modalProducto'));
-            modal.show();
         }
 
         cargarProductos();
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

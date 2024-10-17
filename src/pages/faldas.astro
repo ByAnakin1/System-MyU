@@ -1,6 +1,6 @@
----
+--- 
 import Interfaz from "../components/interfaz.astro"
----
+--- 
 
 <Interfaz />
 
@@ -30,7 +30,6 @@ import Interfaz from "../components/interfaz.astro"
 
         <div class="d-flex justify-content-start mb-3">
             <button class="btn btn-success me-2" data-bs-toggle="modal" data-bs-target="#modalProducto" onclick="prepararFormulario()">Agregar Producto</button>
-            
             <input type="text" class="form-control w-50" id="buscarProducto" placeholder="Buscar producto..." oninput="buscarProducto()">
         </div>
 
@@ -67,6 +66,7 @@ import Interfaz from "../components/interfaz.astro"
                 </div>
                 <div class="modal-body">
                     <form id="formProducto">
+                        <input type="hidden" id="productoId">
                         <div class="mb-3">
                             <label for="nombre" class="form-label">Nombre del Producto</label>
                             <input type="text" class="form-control" id="nombre" required>
@@ -85,7 +85,7 @@ import Interfaz from "../components/interfaz.astro"
                         </div>
                         <div class="mb-3">
                             <label for="imagen1" class="form-label">Imagen 1</label>
-                            <input type="text" class="form-control" id="imagen1" placeholder="URL de la imagen">
+                            <input type="text" class="form-control" id="imagen1" placeholder="URL de la imagen" required>
                         </div>
                         <div class="mb-3">
                             <label for="imagen2" class="form-label">Imagen 2</label>
@@ -113,22 +113,18 @@ import Interfaz from "../components/interfaz.astro"
             // Manejar el evento submit del formulario
             document.getElementById("formProducto").addEventListener("submit", async (event) => {
                 event.preventDefault();
-                await agregarProducto();
+                const productoId = document.getElementById('productoId').value;
+                if (productoId) {
+                    await editarProducto(productoId);
+                } else {
+                    await agregarProducto();
+                }
             });
         });
 
         // Función para agregar un producto
         async function agregarProducto() {
-            const nombre = document.getElementById('nombre').value;
-            const descripcion = document.getElementById('descripcion').value;
-            const precio = document.getElementById('precio').value;
-            const stock = document.getElementById('stock').value;
-            const imagen1 = document.getElementById('imagen1').value;
-            const imagen2 = document.getElementById('imagen2').value;
-            const imagen3 = document.getElementById('imagen3').value;
-            const imagen4 = document.getElementById('imagen4').value;
-
-            const nuevoProducto = { nombre, descripcion, precio, stock, imagen1, imagen2, imagen3, imagen4 };
+            const nuevoProducto = obtenerDatosProducto();
 
             try {
                 const response = await fetch('http://localhost:3000/api/productos', {
@@ -148,6 +144,32 @@ import Interfaz from "../components/interfaz.astro"
                 }
             } catch (error) {
                 console.error('Error al agregar el producto:', error);
+                alert('Error de conexión');
+            }
+        }
+
+        // Función para editar un producto
+        async function editarProducto(id) {
+            const productoEditado = obtenerDatosProducto();
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/productos/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productoEditado)
+                });
+
+                if (response.ok) {
+                    alert('Producto editado exitosamente');
+                    cargarProductos();
+                    prepararFormulario();
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalProducto'));
+                    modal.hide();
+                } else {
+                    alert('Hubo un error al editar el producto');
+                }
+            } catch (error) {
+                console.error('Error al editar el producto:', error);
                 alert('Error de conexión');
             }
         }
@@ -173,12 +195,12 @@ import Interfaz from "../components/interfaz.astro"
                             <td><img src="${producto.imagen3}" width="50"></td>
                             <td><img src="${producto.imagen4}" width="50"></td>
                             <td>
-                                <button class="btn btn-warning btn-sm">Editar</button>
+                                <button class="btn btn-warning btn-sm" onclick="cargarProducto(${producto.id})">Editar</button>
                                 <button class="btn btn-danger btn-sm" onclick="eliminarProducto(${producto.id})">Eliminar</button>
                             </td>
                         </tr>
                     `;
-                    tablaProductos.insertAdjacentHTML('beforeend', fila);
+                    tablaProductos.innerHTML += fila;
                 });
             } catch (error) {
                 console.error('Error al cargar los productos:', error);
@@ -187,36 +209,67 @@ import Interfaz from "../components/interfaz.astro"
 
         // Función para eliminar un producto
         async function eliminarProducto(id) {
-            try {
-                const response = await fetch(`http://localhost:3000/api/productos/${id}`,{
-                    method: 'DELETE',
-                });
+            if (confirm('¿Estás seguro de eliminar este producto?')) {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/productos/${id}`, {
+                        method: 'DELETE'
+                    });
 
-                if (response.ok) {
-                    alert('Producto eliminado exitosamente');
-                    cargarProductos();
-                } else {
-                    alert('Hubo un error al eliminar el producto');
+                    if (response.ok) {
+                        alert('Producto eliminado exitosamente');
+                        cargarProductos();
+                    } else {
+                        alert('Hubo un error al eliminar el producto');
+                    }
+                } catch (error) {
+                    console.error('Error al eliminar el producto:', error);
                 }
-            } catch (error) {
-                console.error('Error al eliminar el producto:', error);
-                alert('Error de conexión');
             }
         }
 
-        // Función para preparar el formulario y limpiar campos
-        function prepararFormulario() {
-            document.getElementById("formProducto").reset();
+        // Función para obtener datos del formulario
+        function obtenerDatosProducto() {
+            return {
+                nombre: document.getElementById('nombre').value,
+                descripcion: document.getElementById('descripcion').value,
+                precio: document.getElementById('precio').value,
+                stock: document.getElementById('stock').value,
+                imagen1: document.getElementById('imagen1').value,
+                imagen2: document.getElementById('imagen2').value,
+                imagen3: document.getElementById('imagen3').value,
+                imagen4: document.getElementById('imagen4').value
+            };
         }
 
-        // Función para buscar productos
-        function buscarProducto() {
-            const input = document.getElementById("buscarProducto").value.toLowerCase();
-            const filas = document.querySelectorAll("#tablaProductos tr");
-            filas.forEach(fila => {
-                const nombreProducto = fila.querySelector("td:nth-child(2)").textContent.toLowerCase();
-                fila.style.display = nombreProducto.includes(input) ? "" : "none";
-            });
+        // Función para preparar el formulario para agregar un nuevo producto
+        function prepararFormulario() {
+            document.getElementById('productoId').value = '';
+            document.getElementById('formProducto').reset();
+            document.getElementById('modalProductoLabel').textContent = 'Agregar Producto';
+        }
+
+        // Función para cargar un producto en el formulario para editar
+        async function cargarProducto(id) {
+            try {
+                const response = await fetch(`http://localhost:3000/api/productos/${id}`);
+                const producto = await response.json();
+
+                document.getElementById('productoId').value = producto.id;
+                document.getElementById('nombre').value = producto.nombre;
+                document.getElementById('descripcion').value = producto.descripcion;
+                document.getElementById('precio').value = producto.precio;
+                document.getElementById('stock').value = producto.stock;
+                document.getElementById('imagen1').value = producto.imagen1;
+                document.getElementById('imagen2').value = producto.imagen2;
+                document.getElementById('imagen3').value = producto.imagen3;
+                document.getElementById('imagen4').value = producto.imagen4;
+
+                document.getElementById('modalProductoLabel').textContent = 'Editar Producto';
+                const modal = new bootstrap.Modal(document.getElementById('modalProducto'));
+                modal.show();
+            } catch (error) {
+                console.error('Error al cargar el producto:', error);
+            }
         }
     </script>
 
